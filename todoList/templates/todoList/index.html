@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ToDo</title>
+    {% load static %}
+    <link href ="{% static 'todoList/styles.css' %}" rel="stylesheet" type="text/css" id="css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+</head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="todolist not-done">
+             <h1>ToDos</h1>
+                <div class="delete-group">
+                    <span class="delete-group-btn">
+                        <a href="{% url 'deleteAll' %}">
+                        <button type="submit" id="delete-all-btn" class="btn btn-success">DELETE ALL</button>
+                        </a>
+                    </span>
+                </div>
+                <form action = "{% url 'add' %}" method="POST" role="form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="input-group">
+                            {{ form.text }}
+                            <span class="input-group-btn">
+                                <button type="submit" id="add-btn" class="btn btn-success">ADD</button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+
+                    <ul id="todo-items" class="list-unstyled">
+                    {% for todo in todo_list %}
+                        {% if not todo.complete %}
+                            <li>
+                                <a href="{% url 'complete' todo.id %}"> {{ todo.text }} </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    </ul>
+                <div class="todo-footer">
+                    <strong><span class="count-todos">{{ counts }}</span></strong> Items Left
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="todolist">
+             <h1>Already Done</h1>
+                <div class="delete-group">
+                    <span class="delete-group-btn">
+                        <a href="{% url 'deleteCompleted' %}">
+                        <button type="submit" id="delete-completed-btn" class="btn btn-success">DELETE COMPLETED</button>
+                        </a>
+                    </span>
+                </div>
+                <ul id="done-items" class="list-unstyled">
+                    {% for todo in todo_list %}
+                        {% if todo.complete %}
+                            <li> {{ todo.text }}</li>
+                        {% endif %}
+                    {% endfor %}
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
